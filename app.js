@@ -8,12 +8,12 @@ let enabled = !motionQuery.matches;
 let context, releaseTimeline, releaseType = 'rolling';
 try { const saved = sessionStorage.getItem('cloud-motion'); if(saved === 'off') enabled = false; } catch {}
 const motionButton = $('#motion');
-const oldColor='#b6a5ee', newColor='#ff865e';
+const oldColor='#d6e6fb', newColor='#1565c0';
 const replicas=$$('.replica');
 const releaseStatus=$('#release-status');
 const releaseLabels={rolling:'ROLLING UPDATE',recreate:'RECREATE',bluegreen:'BLUE / GREEN',canary:'CANARY RELEASE'};
 const initialCopy={rolling:'Pods transition to v2 one at a time.',recreate:'Stop the old version before starting the new one.',bluegreen:'Prepare green, then switch traffic from blue.',canary:'Start with a small, controlled share of traffic.'};
-function setReplica(i,version){replicas[i].style.backgroundColor=version===2?newColor:oldColor;$('strong',replicas[i]).textContent='v'+version;}
+function setReplica(i,version){replicas[i].style.backgroundColor=version===2?newColor:oldColor;replicas[i].style.color=version===2?'#ffffff':'#0c2340';$('strong',replicas[i]).textContent='v'+version;}
 function finalRelease(type){
  replicas.forEach((r,i)=>{r.style.opacity='1';r.style.transform='none';setReplica(i,type==='canary'?(i===3?2:1):type==='bluegreen'?(i>=2?2:1):2)});
  const share=type==='canary'?10:100;
@@ -96,8 +96,8 @@ function setup(){
  $$('.plan-item').forEach((el,i)=>g.from(el,{y:45,opacity:.2,duration:.8,delay:phone?0:i*.1,scrollTrigger:{trigger:el,start:'top 88%'}}));
  const failover=g.timeline({scrollTrigger:{trigger:'.failover-figure',start:'top 75%',end:'bottom 35%',scrub:.5,onUpdate:self=>{const failed=self.progress>.35;$('.primary-site .site-state').textContent=failed?'UNAVAILABLE':'HEALTHY';$('.backup-site .site-state').textContent=self.progress>.6?'SERVING TRAFFIC':'READY'}}});
  failover.to('.primary-site',{opacity:.35,duration:.3},.2).to('.primary-path',{opacity:.15,duration:.3},.2)
- .to('.recovery-path',{stroke:'#774cab',strokeWidth:4,duration:.3},.5)
- .to('.backup-site rect',{fill:'#cbb5e5',duration:.4},.5)
+ .to('.recovery-path',{stroke:'#1565c0',strokeWidth:4,duration:.3},.5)
+ .to('.backup-site rect',{fill:'#b7d4f8',duration:.4},.5)
  .to('.failover-packet',{attr:{cx:455},duration:.35,ease:'none'},.4)
  .to('.failover-packet',{attr:{cy:240},duration:.35,ease:'none'},.75);
  $$('.signal').forEach((path,i)=>{const length=path.getTotalLength();g.fromTo(path,{strokeDasharray:length,strokeDashoffset:length},{strokeDashoffset:0,ease:'none',scrollTrigger:{trigger:'.signal-visual',start:'top 95%',end:'bottom 35%',scrub:1+i*.3}})});
